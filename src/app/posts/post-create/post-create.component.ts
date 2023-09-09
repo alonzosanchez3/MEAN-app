@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Post } from 'src/app/models/post';
+import { PostsService } from 'src/app/service/posts.service';
 
 @Component({
   selector: 'app-post-create',
@@ -7,11 +10,34 @@ import { Component } from '@angular/core';
 })
 export class PostCreateComponent {
 
-  enteredValue = ''
-  post: string = ''
+  enteredContent = ''
+  enteredTitle = ''
+  myForm: FormGroup
+  showForm: boolean = true;
+
+  constructor(private fb: FormBuilder, private postsService: PostsService) {
+
+  }
+
+  ngOnInit() {
+    this.myForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      content: ['', [Validators.required, Validators.minLength(10)]]
+    })
+
+  }
 
   onAddPost () {
-    this.post = this.enteredValue;
+    const newPost: Post = {
+      title: this.myForm.controls['title'].value,
+      content: this.myForm.controls['content'].value
+    }
+    this.postsService.addPost(newPost)
+    this.showForm = false;
+    setTimeout(() => {
+      this.myForm.reset()
+      this.showForm = true
+    })
   }
 
 }

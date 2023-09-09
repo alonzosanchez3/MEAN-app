@@ -7,12 +7,20 @@ import {FormsModule} from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import {MatInputModule} from '@angular/material/input'
 import {MatCardModule} from '@angular/material/card'
-import {MatButtonModule} from '@angular/material/button'
+import {MatButtonModule} from '@angular/material/button';
+import { HeaderComponent } from './header/header.component'
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { PostListComponent } from './posts/post-list/post-list.component'
+import {MatExpansionModule} from '@angular/material/expansion'
+import { ReactiveFormsModule } from '@angular/forms';
+import { PostsService } from './service/posts.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostCreateComponent
+    PostCreateComponent,
+    HeaderComponent,
+    PostListComponent
   ],
   imports: [
     BrowserModule,
@@ -20,9 +28,12 @@ import {MatButtonModule} from '@angular/material/button'
     BrowserAnimationsModule,
     MatInputModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule,
+    MatExpansionModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [PostsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
