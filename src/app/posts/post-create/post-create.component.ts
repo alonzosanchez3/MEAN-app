@@ -29,6 +29,7 @@ export class PostCreateComponent {
 
   onAddPost () {
     const newPost: Post = {
+      id: (Math.floor(Math.random() * 10000)).toString(),
       title: this.myForm.controls['title'].value,
       content: this.myForm.controls['content'].value
     }

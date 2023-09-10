@@ -18,6 +18,7 @@ export class PostListComponent {
   }
 
   ngOnInit() {
+    this.postsService.getPosts()
     this.postSubscription = this.postsService.getPostUpdateListener().subscribe((value) => {
       this.posts = value;
     })
