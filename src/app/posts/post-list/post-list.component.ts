@@ -13,6 +13,10 @@ export class PostListComponent {
   posts:Post[] = []
   postSubscription: Subscription;
 
+  handleDelete(post: Post) {
+    this.postsService.deletePost(post)
+  }
+
   constructor(private postsService:PostsService) {
 
   }
