@@ -1,11 +1,11 @@
 <mat-card>
   <form (ngSubmit)="onAddPost()" [formGroup]="myForm" *ngIf="showForm">
     <mat-form-field>
-      <input type="text" matInput ngModel formControlName="title" placeholder="Post Title">
+      <input type="text" matInput formControlName="title" placeholder="Post Title">
       <mat-error *ngIf="myForm.controls['title'].invalid">Needs to be at least 3 characters long</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <textarea rows="4" matInput ngModel formControlName="content" placeholder="Post Content"></textarea>
+      <textarea rows="4" matInput formControlName="content" placeholder="Post Content"></textarea>
       <mat-error *ngIf="myForm.controls['content'].invalid">Needs to be at least 10 characters long</mat-error>
 
     </mat-form-field>
