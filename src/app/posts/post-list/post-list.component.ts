@@ -12,6 +12,7 @@ export class PostListComponent {
 
   posts:Post[] = []
   postSubscription: Subscription;
+  isLoading = false;
 
   handleDelete(post: Post) {
     this.postsService.deletePost(post)
@@ -22,8 +23,10 @@ export class PostListComponent {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this.postsService.getPosts()
     this.postSubscription = this.postsService.getPostUpdateListener().subscribe((value) => {
+      this.isLoading = false
       this.posts = value;
     })
   }

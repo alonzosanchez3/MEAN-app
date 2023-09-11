@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PostsService } from './service/posts.service';
 import {HttpClientModule} from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { AppRoutingModule } from './app-routing.module';
     MatToolbarModule,
     MatExpansionModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatProgressSpinnerModule
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]

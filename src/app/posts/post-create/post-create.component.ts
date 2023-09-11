@@ -18,6 +18,7 @@ export class PostCreateComponent {
   private mode: 'create' | 'edit' = 'create';
   private postId: string;
   post: Post;
+  isLoading = false;
 
   constructor(private fb: FormBuilder, private postsService: PostsService, private route: ActivatedRoute) {
 
@@ -34,10 +35,15 @@ export class PostCreateComponent {
       if(paramMap.has('postId')) {
         this.mode = 'edit'
         this.postId = paramMap.get('postId')
-        this.post = this.postsService.getPost(this.postId)
-        this.myForm.patchValue({
-          title: this.post ? this.post.title : '',
-          content: this.post ? this.post.content : ''
+        this.isLoading = true
+        this.postsService.getPost(this.postId).subscribe((response) => {
+          this.isLoading = false
+          this.post = {...response.post, id: response.post.id}
+          console.log(this.post)
+          this.myForm.patchValue({
+            title: this.post ? this.post.title : '',
+            content: this.post ? this.post.content : ''
+          })
         })
 
       } else {
@@ -49,17 +55,22 @@ export class PostCreateComponent {
   }
 
   onAddPost () {
-    const newPost: Post = {
-      id: null,
+    this.post = {
+      id: this.post?.id || null,
       title: this.myForm.controls['title'].value,
       content: this.myForm.controls['content'].value
     }
-    this.postsService.addPost(newPost)
-    this.showForm = false;
-    setTimeout(() => {
-      this.myForm.reset()
-      this.showForm = true
-    })
+    this.isLoading = true
+    if(this.mode === 'create') {
+      this.postsService.addPost(this.post)
+      this.showForm = false;
+      setTimeout(() => {
+        this.myForm.reset()
+        this.showForm = true
+      })
+    } else {
+      this.postsService.updatePost(this.post)
+    }
   }
 
 
