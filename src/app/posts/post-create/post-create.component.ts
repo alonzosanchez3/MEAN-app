@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from 'src/app/models/post';
 import { PostsService } from 'src/app/service/posts.service';
+import { mimeType } from './mime-type.validator';
 
 @Component({
   selector: 'app-post-create',
@@ -19,6 +20,7 @@ export class PostCreateComponent {
   private postId: string;
   post: Post;
   isLoading = false;
+  imagePreview: string;
 
   constructor(private fb: FormBuilder, private postsService: PostsService, private route: ActivatedRoute) {
 
@@ -27,7 +29,8 @@ export class PostCreateComponent {
   ngOnInit() {
     this.myForm = this.fb.group({
       title: [this.post ? this.post.title : '', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      content: ['', [Validators.required, Validators.minLength(10)]]
+      content: ['', [Validators.required, Validators.minLength(10)]],
+      image: [null, [Validators.required], mimeType]
     })
 
 
@@ -62,7 +65,7 @@ export class PostCreateComponent {
     }
     this.isLoading = true
     if(this.mode === 'create') {
-      this.postsService.addPost(this.post)
+      this.postsService.addPost(this.post, this.myForm.value.image)
       this.showForm = false;
       setTimeout(() => {
         this.myForm.reset()
@@ -71,6 +74,17 @@ export class PostCreateComponent {
     } else {
       this.postsService.updatePost(this.post)
     }
+  }
+
+  onImagePicked(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0]
+    this.myForm.patchValue({image: file})
+    this.myForm.get('image').updateValueAndValidity()
+    const reader = new FileReader()
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    }
+    reader.readAsDataURL(file)
   }
 
 
