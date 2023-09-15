@@ -41,11 +41,17 @@ export class PostCreateComponent {
         this.isLoading = true
         this.postsService.getPost(this.postId).subscribe((response) => {
           this.isLoading = false
-          this.post = {...response.post, id: response.post.id}
+          this.post = {
+            id: response.post.id,
+            title: response.post.title,
+            content: response.post.content,
+            imagePath: response.post.imagePath
+          }
           console.log(this.post)
           this.myForm.patchValue({
             title: this.post ? this.post.title : '',
-            content: this.post ? this.post.content : ''
+            content: this.post ? this.post.content : '',
+            image: this.post.imagePath
           })
         })
 
@@ -61,7 +67,8 @@ export class PostCreateComponent {
     this.post = {
       id: this.post?.id || null,
       title: this.myForm.controls['title'].value,
-      content: this.myForm.controls['content'].value
+      content: this.myForm.controls['content'].value,
+      imagePath: null
     }
     this.isLoading = true
     if(this.mode === 'create') {

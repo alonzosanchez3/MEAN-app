@@ -14,9 +14,9 @@ export class PostsService {
   private postsUpdated = new BehaviorSubject<Post[]>([]);
 
   getPosts() {
-    this.http.get<{message: string, posts: {_id: string, title: string, content: string}[]}>('http://localhost:3001/api/posts').pipe(map((res) => {
+    this.http.get<{message: string, posts: {_id: string, title: string, content: string, imagePath: string | File}[]}>('http://localhost:3001/api/posts').pipe(map((res) => {
       return res.posts.map((post) => {
-        return {title: post.title, content: post.content, id: post._id}
+        return {title: post.title, content: post.content, id: post._id, imagePath: post.imagePath}
       })
     })).subscribe((val) => {
       this.posts = val
@@ -29,6 +29,20 @@ export class PostsService {
   }
 
   updatePost(post: Post) {
+    if(typeof(post.imagePath) === 'object') {
+      const postData = new FormData()
+      postData.append('title', post.title)
+      postData.append('content', post.content)
+      postData.append('image', post.imagePath)
+    } else {
+      const postData: Post = {
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        imagePath: post.imagePath
+      }
+    }
+
     this.http.patch<{message: string}>(`http://localhost:3001/api/posts/${post.id}`, post).subscribe((val) => {
       console.log(val.message)
       const updatedPosts = [...this.posts];
@@ -51,10 +65,8 @@ export class PostsService {
     postData.append('title', post.title)
     postData.append('content', post.content)
     postData.append('image', image, post.title)
-    this.http.post<{message: string, postId: string}>('http://localhost:3001/api/posts', postData).subscribe((val) => {
-      const newPost: Post = {id: val.postId, title: post.title, content: post.content}
-      console.log(val.message)
-      post.id = val.postId;
+    this.http.post<{message: string, post: Post}>('http://localhost:3001/api/posts', postData).subscribe((val) => {
+      const newPost: Post = {id: val.post.id, title: post.title, content: post.content, imagePath: val.post.imagePath}
       this.posts.push(post)
       this.postsUpdated.next([...this.posts])
       this.router.navigate(["/"])
