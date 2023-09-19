@@ -54,6 +54,7 @@ export class PostsService {
       this.postsUpdated.next([...this.posts])
       this.router.navigate(["/"])
       //this will route us to the home page
+      //post update
     })
   }
 
